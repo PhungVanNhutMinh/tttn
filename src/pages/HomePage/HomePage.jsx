@@ -7,8 +7,7 @@ import slide2 from '../../images/slide2.webp';
 import slide3 from '../../images/slide3.webp';
 import CardComponent from '../../components/CardComponent/CardComponent';
 
-import { NavBarComponent } from '../../components/NavBarComponent/NavBarComponent';
-import { ButtonComponent } from '../../components/ButtonComponent/ButtonCoponent';
+
 const HomePage = () => {
     const arr = ['TV', 'Điện thoại', 'Laptop', 'Tablet', 'Âm thanh', 'Phụ kiện'];
     return (

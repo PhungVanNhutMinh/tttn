@@ -37,4 +37,9 @@ font - size: 12px;
 line - height: 16px;
 color: rgb(255, 0, 0);
 margin - top: 4px;
-`; 
+`;
+export const WrapperStyletextSell = styled.span`
+font-size: 15px;
+line-height: 24px;
+color: rgb(120, 120, 120)
+`;
