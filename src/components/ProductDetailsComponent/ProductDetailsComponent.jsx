@@ -65,7 +65,7 @@ const ProductDetailsComponent = () => {
                     <ButtonComponent
 
                         size={40}
-                        //bordered={false}
+                        bordered={false}
                         styleButton={{
                             background: 'rgb(255, 57, 69)',
                             height: '48px',
