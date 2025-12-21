@@ -1,76 +1,84 @@
-import React from 'react';
-import { TypeProduct } from '../../components/TypeProduct/TypeProduct';
-import { WrapperButtonMore, WrapperProducts, WrapperTypeProduct } from './style';
-import SliderComponent from '../../components/SliderComponent/SliderComponent';
-import slide1 from '../../images/slide1.webp';
-import slide2 from '../../images/slide2.webp';
-import slide3 from '../../images/slide3.webp';
+import React, { useState } from 'react';
+import { products, sliderImages } from '../../data';
 import CardComponent from '../../components/CardComponent/CardComponent';
-import { useQuery } from '@tanstack/react-query';
-import * as ProductService from '../../services/ProductService'
-
+import ProductDetailModal from '../../components/ProductDetailModal/ProductDetailModal';
+import SliderComponent from '../../components/SliderComponent/SliderComponent';
 
 const HomePage = () => {
-    const arr = ['TV', 'Điện thoại', 'Laptop', 'Tablet', 'Âm thanh', 'Phụ kiện'];
-    const fetchProductAll = async () => {
-        const res = await ProductService.getAllProduct()
-        return res
+    const [category, setCategory] = useState('all');
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [isOpenModal, setIsOpenModal] = useState(false);
+
+    const filteredProducts = products.filter(product => {
+        if (category === 'all') return true;
+        return product.category === category;
+    });
+
+    const handleOpenDetail = (product) => {
+        setSelectedProduct(product);
+        setIsOpenModal(true);
     }
-
-    const { isLoading, data: products } = useQuery({
-        queryKey: ['products'],
-        queryFn: fetchProductAll,
-        retry: 3,
-        retryDelay: 1000
-    })
-
 
     return (
         <>
-            <div style={{ width: '1270px', margin: 'o auto' }}>
-                <WrapperTypeProduct style={{ padding: '0 120px' }}>
-                    {arr.map((item) => {
-                        return (
-                            <TypeProduct name={item} key={item} />
-                        )
-                    },
-                    )}
-                </WrapperTypeProduct>
-            </div>
-            <div className="body" style={{ width: '100%', backgroundColor: '#efefef' }}>
-                <div id="container" style={{ height: '1000px', width: '1270px', margin: '0 auto' }}>
-                    <SliderComponent arrImages={[slide1, slide2, slide3]} />
-                    <WrapperProducts>
-                        {products?.data?.map((product) => {
-                            return (
-                                <CardComponent
-                                    key={product._id}
-                                    countInStock={product.countInStock}
-                                    description={product.description}
-                                    image={product.image}
-                                    name={product.name}
-                                    price={product.price}
-                                    rating={product.rating}
-                                    type={product.type}
-                                    selled={product.selled}
-                                    discount={product.discount}
-                                />
-                            );
-                        })}
-
-                    </WrapperProducts>
-                    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-                        <WrapperButtonMore textButton="Xem Thêm" type='outline' styleButton={{
-                            border: '1px solid rgb(11, 116, 229)', color: 'rgb(11, 116, 229)',
-                            marginTop: '20px', width: '240px', height: '40px', display: 'block',
-                            marginLeft: 'auto', marginRight: 'auto', borderRadius: '4px'
-                        }}
-                            styleTextButton={{ fontWeight: '500' }} />
-                    </div>
+            <div style={{ width: '100%', backgroundColor: '#efefef', paddingBottom: '50px' }}>
+                <div id="container" style={{ height: '100%', width: '1270px', margin: '0 auto', paddingTop: '10px' }}>
+                    <SliderComponent arrImages={sliderImages} />
                 </div>
             </div>
 
+            <div style={{ padding: '0 120px', background: '#efefef', minHeight: '100vh' }}>
+
+                <h2 style={{ margin: '20px 0', fontSize: '24px', fontWeight: 'bold' }}>Sản phẩm nổi bật</h2>
+
+                <div className="category-tabs" style={{ display: 'flex', gap: '15px', marginBottom: '20px', overflowX: 'auto', paddingBottom: '5px' }}>
+                    {['all', 'apple', 'samsung', 'xiaomi', 'oppo', 'vivo'].map((cat) => (
+                        <div
+                            key={cat}
+                            onClick={() => setCategory(cat)}
+                            style={{
+                                padding: '10px 25px',
+                                background: category === cat ? 'rgb(255, 57, 69)' : '#fff',
+                                color: category === cat ? '#fff' : '#333',
+                                borderRadius: '30px',
+                                cursor: 'pointer',
+                                textTransform: 'capitalize',
+                                border: '1px solid #ddd',
+                                fontWeight: '600',
+                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                            }}
+                        >
+                            {cat === 'all' ? 'Tất cả' : cat}
+                        </div>
+                    ))}
+                </div>
+
+                <div className="products-grid" style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                    {filteredProducts.map((product) => (
+                        <div key={product.id} onClick={() => handleOpenDetail(product)} style={{ cursor: 'pointer' }}>
+                            <CardComponent
+                                countInStock={product.countInStock}
+                                description={product.name}
+                                image={product.image}
+                                name={product.name}
+                                price={product.price}
+                                rating={product.rating}
+                                type={product.category}
+                                selled={100}
+                                discount={product.discount || 0}
+                            />
+                        </div>
+                    ))}
+                </div>
+
+                <ProductDetailModal
+                    isOpen={isOpenModal}
+                    onCancel={() => setIsOpenModal(false)}
+                    product={selectedProduct}
+                />
+            </div>
         </>
-    )
+    );
 };
+
 export default HomePage;

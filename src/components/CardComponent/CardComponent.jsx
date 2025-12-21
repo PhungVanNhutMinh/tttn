@@ -11,13 +11,15 @@ const CardComponent = (props) => {
             hoverable
             styles={{ header: { width: '200px', height: '200px' } }}
             style={{ width: 200 }}
-            cover={
-                <img
-                    draggable={false}
-                    alt="example"
-                    src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                />
-            }
+            bodyStyle={{ padding: '10px' }}
+            cover={<img alt={name} src={image} style={{ height: '200px', width: '200px', objectFit: 'contain' }} />}//Tĩnh
+        // cover={
+        //     <img
+        //         draggable={false}
+        //         alt="example"
+        //         src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
+        //     />
+        // }
         >
             <img
                 src={logo}
